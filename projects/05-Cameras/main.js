@@ -1,6 +1,8 @@
 import './style.css'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+//----------------------------------------------------------------------------------------------------------------
 //Scene
 const scene = new THREE.Scene();
 
@@ -17,8 +19,8 @@ const sizes = {
   height: window.innerHeight
 }
 
-//Camera there ara a lot of cameras 
-
+//----------------------------------------------------Cameras  introduction---------------------------------------------------
+//There are many cameras
 //Camera Class
 //Is the base class for cameras and there are a lot of cameras:
 
@@ -34,7 +36,7 @@ const sizes = {
 //Orthographic Camera
 //Used to create a render of the scene but without perspective
 
-//-----------------------------------------------Perspective Camera--------------------------------------------------------
+//-----------------------------------------------Perspective Camera
 //The camera we use thera are 4 parametters  
 //Field of view
 //Aspect ratio is the width/height this is for the image in camera do not squeez and it will be same ass the renderer
@@ -45,7 +47,7 @@ const perspectivCamera = new THREE.PerspectiveCamera(50, sizes.width/sizes.heigh
 perspectivCamera.position.set(2, 1, 3);
 perspectivCamera.lookAt(new THREE.Vector3(0,0,0))
 
-//-----------------------------------------------Orthographic Camera----------------------------------------------
+//-----------------------------------------------Orthographic Camera
 //A camera without perspective
 //There are parameter left, right, top and a botom there are the sizes of the camera we want to render
 //near and far
@@ -68,17 +70,72 @@ const renderer = new THREE.WebGLRenderer({
 }) 
 renderer.setSize(sizes.width, sizes.height) 
 
+//---------------------------------------------------------Camera Controls---------------------------------------------------
+
+//Cursor
+const cursor = {
+  x:0,
+  y:0,
+}
+
+window.addEventListener('mousemove', (event)=>{ //Here we listen the position of the cursor to make this responsive we will make this values go from 0 to 1 to do this, we can divide it to the total viewport sizes
+  cursor.x = (event.clientX/sizes.width)-0.5;
+  cursor.y = (event.clientY/sizes.height)-0.5;
+})
+
+function cameraControl(){
+  //This will create a imaginary plane where the camera can move arround , but it can move on z axies.
+  // perspectivCamera.position.x = (cursor.x)*-10;
+  // perspectivCamera.position.y = (cursor.y)*10;
+  
+  //This will create a imaginary flat circle that can rotate the camera arround the cube with sin() and cos()
+  perspectivCamera.position.x = Math.sin(-cursor.x*Math.PI*2)*3;
+  perspectivCamera.position.z = Math.cos(-cursor.x*Math.PI*2)*3;
+  //perspectivCamera.position.y = cursor.y *5;
+   perspectivCamera.lookAt(cube.position);
+}
+
+//Creating controls is hard and sometimes not intuitive, thats why we have integrated controls in three js, there are many controls integrated
+//------Device Orientation Control
+//Used to link the device orentation control with the experience, you can see the things moving while youre moving your device.
+//------Fly Controls 
+//Controls made to emulate the camera movements while flying and can rotate on de z axies
+//------First Person control
+//Is like fly control, but you can not change the z axies
+//------Pointer Lock Controls
+//The most inmersive, you can use it tu emulate a first person game. 
+//Orbit Controls
+//Controls to emulate the controls of a 3D software
+//Thrackback control
+//is like orbit controls but without limit, you can loop in every direction
+//Transform controls 
+//It can be used to muve on sppace with the mouse
+//Drag Controls
+//There are to move objects by using controls
+
+//To use orbit control we have to instansiatie the control first of all we have to import it
+
+//Controls
+const controls = new OrbitControls(perspectivCamera, canvas);
+//Orbit controls have some options 
+controls.enableDamping = true;
 
 //Animation
 
 const clock = new THREE.Clock();
 
 const tick = ()=>{
-  renderer.render(scene, perspectivCamera); 
+  //Clock
   const elapsed = clock.getElapsedTime();
-  cube.rotation.y = Math.sin(elapsed)*Math.PI;
+  
+  //Update Objects
+  
+  //cameraControl();
+  
+  //Update Controls
+  controls.update(); //To make the damping works correctli we need to update the controls even when they are not on use
 
-
+  renderer.render(scene, perspectivCamera); 
   window.requestAnimationFrame(tick);
 }
 tick();
