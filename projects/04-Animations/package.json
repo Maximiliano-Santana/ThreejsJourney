@@ -1,5 +1,5 @@
 {
-  "name": "03-transform-objects",
+  "name": "04-animations",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
     "vite": "^4.4.0"
   },
   "dependencies": {
+    "gsap": "^3.5.1",
     "three": "^0.154.0"
   }
 }
