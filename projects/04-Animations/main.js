@@ -105,12 +105,22 @@ const tick3 = ()=>{
 //-----------------------------------Using a Library-----------------------------------------
 //If you want to create timelines, tweens, etc, you can use GSAP. Is a library taht simplify this things.
 
-gsap.to(cube.position, {duration: 1, delay:0 , x:2}); //Method that can animates first pass the object position and then an object 
-//The animation is beeing procesed in other method thats why it doesn't depend of the framerate
-gsap.to(cube.position, {duration: 2, delay: 1, y:2});
-gsap.to(cube.position, {duration: 2, delay: 3, x:-2}); 
-gsap.to(cube.position, {duration: 1, delay: 5, y:0}); 
-gsap.to(cube.position, {duration: 1, delay: 6, x:0}); 
+
+const btnRunAnimation = document.querySelector('.btnRunAnimation');
+let animationRuning = false;
+btnRunAnimation.addEventListener('click', ()=>{
+  if(!animationRuning){
+    animationRuning = true;
+    gsap.to(cube.position, {duration: 1, delay:0 , x:2}); 
+    gsap.to(cube.position, {duration: 2, delay: 1, y:2});
+    gsap.to(cube.position, {duration: 2, delay: 3, x:-2}); 
+    gsap.to(cube.position, {duration: 1, delay: 5, y:0}); 
+    gsap.to(cube.position, {duration: 1, delay: 6, x:0});  
+  }
+  setTimeout(()=>{
+    animationRuning = false;
+  }, 7000) 
+});
 
 const tick4 = () => {
   renderer.render(scene, camera)

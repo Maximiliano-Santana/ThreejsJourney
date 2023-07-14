@@ -9,6 +9,30 @@ body {
   min-height: 100vh;
 }
 
+.btnRunAnimation{
+  position: absolute;
+  bottom: 50px;
+  height: 40px;
+  border: 2px solid #3c3c3c;
+  border-radius: 50px;
+  background-color: gray;
+  font-family: Arial;
+  font-weight: 700;
+  color: white;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.btnRunAnimation:hover{
+  background-color: #3c3c3c;
+  border: 2px solid gray;
+  transition: 0.3s;
+}
+
+.btnRunAnimation:active{
+  scale: 0.95;
+  transition: 0s;
+}
+
 .experience{
   
 }
