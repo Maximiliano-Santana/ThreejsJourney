@@ -115,11 +115,29 @@ createdObject.position.set(0,-0.5,0)
 // createdObject.rotation.z = Math.PI/2;
 // createdObject.rotation.y = Math.PI/2;
 
-scene.add(cube)
+//scene.add(cube)
+
+//------------------------------creating bunch of triangles
+const count = 10;
+const randomPositions = new Float32Array(count * 3 * 3 );
+for ( let i=0; i < count * 3 * 3 ; i++){
+  randomPositions[i] = Math.random();
+}
+
+const randomPositionAtriubutes = new THREE.BufferAttribute(randomPositions, count * 3 * 3 );
+
+const randomGeometry = new THREE.BufferGeometry();
+
+randomGeometry.setAttribute('position', randomPositionAtriubutes);
+
+const randomMesh = new THREE.Mesh(randomGeometry, material)
+
+scene.add(randomMesh);
+
+console.log(randomMesh)
+console.log(createdObject)
 
 
-console.log(cubeGeometry);
-console.log(createdGeometry);
 
 //-----------Sizes
 const sizes = {
