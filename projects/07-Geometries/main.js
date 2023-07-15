@@ -115,7 +115,7 @@ createdObject.position.set(0,-0.5,0)
 // createdObject.rotation.z = Math.PI/2;
 // createdObject.rotation.y = Math.PI/2;
 
-//scene.add(cube)
+scene.add(cube)
 
 //------------------------------creating bunch of triangles
 const count = 10;
