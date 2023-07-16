@@ -213,7 +213,8 @@ colorDiamondTexture.magFilter = THREE.NearestFilter;
 colorTexture.magFilter = THREE.NearestFilter;
 
 //---------------------------------------------------Texture format and optimization-------------------------------------------
-//When prepari your texture keep in pind 3 crucial elements.
+//When preparing your texture keep in pind 3 crucial elements.
+//The diffuculty is to fin the right combination of texture format and resolutions
 
 //-----The weight: The users will have to download all the textures. To better performance we have to find the way to keep the weight of our files the minimum as posible.
 
@@ -229,8 +230,14 @@ colorTexture.magFilter = THREE.NearestFilter;
 
 //-----The data:
 
+//Textures support transparency, but we can't have transparency in .jpg if we want to have only one texture that combine color and apha, we better use .png.
+//If we are using a normal texture we need the exact values witch is why we shouldn't apply lossy compression and we better use .png fot those
+//Sometimes we can combine different data into une texture by using a the red, green, blue and alpha chanel seperatly
 
-
+//----------------Where to find textura
+//poliigon.com
+//3dtextures.me
+//arroway-textures.ch
 
 //Animation
 const clock = new THREE.Clock();
