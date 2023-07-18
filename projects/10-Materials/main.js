@@ -212,7 +212,7 @@ meshStandardMaterial.aoMapIntensity = 2;
 //Height texture 
 //We need to have enough vertices in oue geometry and can control of the intensity 
 meshStandardMaterial.displacementMap = doorHeightTexture;
-//meshStandardMaterial.displacementScale = 0.5;
+meshStandardMaterial.displacementScale = 0.164;
 
 //Metalness and roughness map
 meshStandardMaterial.metalnessMap = doorMetalnessTexture;
@@ -244,6 +244,10 @@ const meshPhysicalMateril = new THREE.MeshPhysicalMaterial();
 //This will maje the objects reflects the sourounds of the scene, used to do the lighting and reflections on the objects
 //Is hard to load, we need to use CubeTextureLoader 
 meshStandardMaterial.envMap = enviromentMapTexture;
+
+//We can get the enviroment maps from hdri heaven but how do we convert the hdri in a cube texture?
+//If have CC0 License is for any prupose.
+//You can use 
 
 var material = meshStandardMaterial;
 //--------------------------------------------------------------------------------------------------------
@@ -284,7 +288,6 @@ gui.add(material, 'metalness', 0, 1, 0.001)
 gui.add(material, 'roughness', 0, 1, 0.001)
 gui.add(material, 'aoMapIntensity', 0, 3, 0.01)
 gui.add(material, 'displacementScale', -1, 1, 0.001)
-gui.add(material.normalScale, 'x', -1, 1, 0.001)
 
 //Animation
 const clock = new THREE.Clock();

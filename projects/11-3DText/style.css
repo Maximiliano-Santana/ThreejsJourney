@@ -1,0 +1,15 @@
+body {
+  background-color: #3c3c3c;
+  margin: 0px;
+  padding: 0px;
+}
+
+.experience {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+
