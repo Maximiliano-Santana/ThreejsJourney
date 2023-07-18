@@ -2,6 +2,8 @@ body {
   background-color: #3c3c3c;
   margin: 0px;
   padding: 0px;
+  min-width: 320px;
+  min-height: 100vh;
 }
 
 .experience {
