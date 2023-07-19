@@ -33,24 +33,24 @@ const loadingManager = new THREE.LoadingManager();
 const textureLoader = new THREE.TextureLoader();
 
 //Fullscreen
-window.addEventListener('dblclick', ()=>{
+// window.addEventListener('dblclick', ()=>{
 
-  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+//   const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
 
-  if (!fullscreenElement){
-    if (canvas.requestFullscreen){
-      canvas.requestFullscreen();
-    } else if (canvas.webkitFullscreenElement){
-      canvas.webkitFullscreenElement();
-    }
-  } else {
-    if (document.exitFullscreen){
-      document.exitFullscreen();
-    } else if (document.webkitFullscreenElement){
-      document.webkitFullscreenElement();
-    }
-  }
-})
+//   if (!fullscreenElement){
+//     if (canvas.requestFullscreen){
+//       canvas.requestFullscreen();
+//     } else if (canvas.webkitFullscreenElement){
+//       canvas.webkitFullscreenElement();
+//     }
+//   } else {
+//     if (document.exitFullscreen){
+//       document.exitFullscreen();
+//     } else if (document.webkitFullscreenElement){
+//       document.webkitFullscreenElement();
+//     }
+//   }
+// })
 
 //Scene 
 const scene = new THREE.Scene();
