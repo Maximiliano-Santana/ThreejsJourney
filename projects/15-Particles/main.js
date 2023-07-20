@@ -77,7 +77,9 @@ orbitControls.enabled = true;
 
 var particlesNumber = {//Made particlesNumber an objet to add it to Gui;
     number: 5000,
-    isAnimated: false,
+    isAnimated: true,
+    aplitude: 1,
+    zAnimated: true,
 }
 
 
@@ -194,6 +196,7 @@ function generateRandomColorBufferAtribute(length){
 
 // Mesh of Points - Particles 
 const sphereParticles = new THREE.Points(particlesGeometry, sphereParticlesMaterial);
+sphereParticles.visible = false;
 scene.add(sphereParticles)
 
 const randomParticles = new THREE.Points(randomParticlesGeometry, starsParticlesMaterial);
@@ -237,6 +240,8 @@ randomParticlesGui.add(particlesNumber, 'isAnimated', 0, 50000, 20).name('Waves 
         randomParticlesGeometry.setAttribute('position', generateRandomPositionsBufferAtribute(particlesNumber.number));
     }
 });
+randomParticlesGui.add(particlesNumber, 'aplitude', 0, 5);
+randomParticlesGui.add(particlesNumber, 'zAnimated');
 
 //Animate
 const clock = new THREE.Clock();
@@ -252,8 +257,13 @@ const tick = ()=>{
             
             //To make this animate like waves, we need to aply an offset to the sinius so that we get that wave shape, we can use the x coordinate
             const x = randomParticlesGeometry.attributes.position.array[i3 + 0];
+            const z = randomParticlesGeometry.attributes.position.array[i3 + 2];
             
-            randomParticlesGeometry.attributes.position.array[i3+1] = Math.sin(time + x);
+            randomParticlesGeometry.attributes.position.array[i3+1] = Math.sin(time + x * particlesNumber.aplitude);
+            if(particlesNumber.zAnimated){
+                randomParticlesGeometry.attributes.position.array[i3+1] +=  Math.sin(time + z * particlesNumber.aplitude);
+            }
+
             //this isnt working cause wee three.js needs to be norigied when a geometry aattribute changes
             //Set the needsUpdate to true on the position attribute
             randomParticlesGeometry.attributes.position.needsUpdate = true;
