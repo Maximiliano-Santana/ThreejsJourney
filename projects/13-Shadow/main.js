@@ -67,6 +67,8 @@ const renderer = new THREE.WebGLRenderer({canvas: canvas});
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.needsUpdate = true;
+
 //renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 renderer.setSize(sizes.width, sizes.height);
@@ -190,6 +192,13 @@ directionalLight.shadow.camera.right = 5
 directionalLight.shadow.camera.bottom = -5
 directionalLight.shadow.camera.left = -5
 
+function updateDirectionalLightCameraAmplitude (amplitude){
+  directionalLight.shadow.camera.top = amplitude
+  directionalLight.shadow.camera.right = ambientLight
+  directionalLight.shadow.camera.bottom = -amplitude
+  directionalLight.shadow.camera.left = -amplitude
+}
+
 //Point light amplitude
 //Point light amplitude can't be modified cause it works different with 6 renders
 
@@ -283,7 +292,7 @@ torusMesh.receiveShadow = true;
 const gui = new GUI();
 
 const lightsGui = gui.addFolder('Lights');
-lightsGui.close();
+//lightsGui.close();
 
 
 //Ambient Light Folder
@@ -347,20 +356,40 @@ directionalLightPositionGui.add(directionalLight.position, 'x', -7, 7, 0.01).nam
 directionalLightPositionGui.add(directionalLight.position, 'y', -1.5, 8, 0.01).name('position Y');
 directionalLightPositionGui.add(directionalLight.position, 'z', -7, 7, 0.01).name('position Z');
 
-// //Directional Light Shadow Folder
+//Directional Light Shadow Folder
+
+//Debug for work resize shadows ------------------------------------------------------------------------------
+// directionalLight.visible = true;
+
+// console.log(renderer.render)
+
+// var newCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+// scene.add(newCameraHelper);
+
+// const createCameraHelper = {
+//   cameraHelper:()=>{
+//     console.log(directionalLight.shadow.camera)
+//     var newCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+//     scene.add(newCameraHelper);
+//   }
+// }
+//directionalLightShadowGui.add(createCameraHelper, 'cameraHelper');
+
+//--------------------------------------------------------------------------------------------------------------
 const directionalLightShadowGui = directionalLightGui.addFolder('Shadows').close();
 
 directionalLightShadowGui.add(directionalLight, 'castShadow').name('Cast Shadow');
 directionalLightShadowGui.add(directionalLight.shadow, 'radius', 1, 20, 0.1);
-directionalLightShadowGui.add(directionalLight.shadow.camera, 'far', 1, 20, 0.1);
 directionalLightShadowGui.add(directionalLight.shadow.mapSize, 'x',  120, 1024, 2).name('ShadowMap Size').onChange((size)=>{
   updateDirecionalLightShadowMapSize(size);
 });
 directionalLightShadowGui.add(directionalLightCameraHelper, 'visible').name('Shadow Camera Helper');
-
-//Directional Light Shadow Camera Helper Folder
-
-const directionalLightShadowCameraGui = directionalLightShadowGui.addFolder('Shadow Camera Amplitud').close();
+// directionalLightShadowGui.add(directionalLight.shadow.camera,  'top', 0.1, 5, 0.01).name('Shadow Camera Amplitude').onChange((amplitude)=>{
+//   updateDirectionalLightCameraAmplitude(amplitude);
+//   renderer.shadowMap.needsUpdate = true;
+//   renderer.shadowMap.autoUpdate = true;
+//   console.log(directionalLight.shadow.camera.left);
+// });
 
 
 //Point Light Folder
@@ -383,7 +412,7 @@ pointLightPositionGui.add(pointLight.position, 'y', -1.5, 10, 0.01).name('positi
 pointLightPositionGui.add(pointLight.position, 'z', -7, 7, 0.01).name('position Z');
 
 //Point Light Shadow Folder
-const pointLightShadowGui = pointLightGui.addFolder('Shadow');
+const pointLightShadowGui = pointLightGui.addFolder('Shadow').close();
 
 pointLightShadowGui.add(pointLight, 'castShadow');
 pointLightShadowGui.add(pointLight.shadow, 'radius', 0, 10);
