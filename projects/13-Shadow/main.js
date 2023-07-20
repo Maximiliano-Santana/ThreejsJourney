@@ -69,6 +69,7 @@ renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.needsUpdate = true;
 
+
 //renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 renderer.setSize(sizes.width, sizes.height);
@@ -467,9 +468,10 @@ const clock = new THREE.Clock();
 const tick = ()=>{
   //Update Controls
   orbitControls.update();
-  //Render
 
+  //Render
   renderer.render(scene, camera);
+
   window.requestAnimationFrame(tick);
 }
 
