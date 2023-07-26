@@ -1,18 +1,34 @@
-body {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #3c3c3c;
-  overflow: hidden; 
+* {
+  margin: 0px;
+  padding: 0px;
 }
 
-/* This fix all the posible troubles that about full screnn in other browsers, versions, mac, etc. And the body with oveflow hidden*/
+html, body {
+  /* overflow: hidden;; */
+  background-color: #1e1e20;
+}
+
 .experience{ 
   position: fixed;
   top: 0;
   left: 0;
   outline:none;
+}
+
+.section{
+  display: flex;
+  position: relative;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  font-size: 50px;
+  font-family: Verdana;
+  padding-left: 10%;
+  padding-right: 10%;
+  justify-content: flex-end;
+}
+
+section:nth-child(odd)
+{
+    justify-content: flex-start;
 }
