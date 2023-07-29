@@ -199,6 +199,33 @@ world.addBody(floorBody);
 // sphere.position.y = 0.5
 // scene.add(sphere)
 
+//----------------------------- Also we can have constraints ---------------------------
+//Enable constraints between two bodieas
+//HingeConstraint - Act likea a door hinge
+//DistanceConstraint - Forces the boides to kep a distance between each other
+//lockConstraint - Merges bodies like if they were wone piece 
+//PointToPointConstraint - glues the bodies to a specific point 
+
+//---------------------------- Workers --------------------------
+//The cpu handle the physics, currently, everithis is done by the same thead in your cpu, and that thread can quicky overloas, the solution is to use workers
+
+//Workers let you put a part of your code in a differen threat to spread load 
+//You can then send and recieve data from that code and considerably improve performances 
+
+//Cannon js stoped to updated, but some people forked the repository and started working on updates
+//This new version is named cannon.es
+
+//----------------------------Ammojs ------------------
+//is harder to use and implement in your project, but has more features
+// It's a portage of Bullet a well know and well-oiled physics engine written in c++
+//it has wwb assemb-y support (a low-level language with better performances supported by most recen browsers)
+//It's more popular and you can find more examples of three.js
+//Its suppor more features.
+
+//-------------------------Physijs--------------------------
+//Is the implemetation of physics in a three.js project, it uses Ammo.js and supports workers natively
+
+
 /**
  * Floor
  */
