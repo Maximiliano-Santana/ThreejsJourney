@@ -107,12 +107,11 @@ const gltfLoader = new GLTFLoader(loadingManager)
 
 //Use the loader like all the other loaders 
 
-const duckGLTF = gltfLoader.load('/models/Duck/glTF/Duck.gltf', (gltf)=>{
-    
-    console.log(gltf)
+const duckGLTF = gltfLoader.load('/models/Duck/glTF/Duck.gltf', (gltf)=>{  
+    // console.log(gltf)
     //scene.add(gltf.scene.children[0]) 
     //scene.add(gltf.scene.children[0].children[0]) 
-    console.log(gltf.scene) 
+    // console.log(gltf.scene) 
 })
 
 //Once is loaded we have a object with
@@ -144,18 +143,51 @@ const duckGLTF = gltfLoader.load('/models/Duck/glTF/Duck.gltf', (gltf)=>{
 //----------------------------------- Binary gltf and Embedded load------------------------
 //It works the same with the GLTFLoader
 //To load all the stuff inside the object 3D we can use a for to loop the object
+//But is not adding all stuff. this is because when you have two scenes, one the scene of your project and other just is imported. When you take one of the imported scene and put it into your scene, when you did thad the children addes got removed from the imported scene
 
-gltfLoader.load('/models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf)=>{
-    for(const child of gltf.scene.children){
-        scene.add(child)
-    }
-});
+// gltfLoader.load('/models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf)=>{
+//     for(const child of gltf.scene.children){
+//         scene.add(child)
+//     }
+// });
 
+//We have two solution, the first is to take the first children of the loaded scene and add it to our scene until there is none left
+
+
+// gltfLoader.load('/models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf)=>{
+//     while(gltf.scene.children.length){
+//         scene.add(gltf.scene.children[0]);
+//     }
+// });
+
+//The other solution is to duplicate the children array an in order to have an unaltered independent array
+//Use the spread operator ... and put the result in a brand new array [].
+//this array will not remove the child when we take it to the other scene.
+
+// gltfLoader.load('/models/FlightHelmet/glTF/FlightHelmet.gltf', (gltf)=>{
+//     const children = [...gltf.scene.children]
+//     for(const child of children){
+//         scene.add(child);
+//     }
+// });
 
 //------------------------------------- Draco GLTF load --------------------------------
+//Draco compression.
+//The Draco version can be much lighter than the default version in this example, the draco version is 55% much lighter than the default
+//Compression is applied to the buffer data (typically the geometry)
+//Draco is not aexclusive to glTF but htey got popular as the same time and implementation went faster with glTF exporters.
+//Google develops the algorithm under the opne-source Apache License
 
+//If we try to add a model that uses draco compression will throw an erro (No DRACOLoader instance provided)
 
+//So to add a Draco compressed model, we need to provide a DRACOLoader instance to ur GLTFLoader,
+//First need to import the DRACOLoader
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
+gltfLoader.load('/models/Duck/glTF-Draco/Duck.gltf', (gltf)=>{  
+    console.log(gltf)
+    console.log(gltf.scene) 
+})
 
 
 
