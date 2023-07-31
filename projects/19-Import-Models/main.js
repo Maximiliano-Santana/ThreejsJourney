@@ -173,6 +173,10 @@ const duckGLTF = gltfLoader.load('/models/Duck/glTF/Duck.gltf', (gltf)=>{
 
 //------------------------------------- Draco GLTF load --------------------------------
 //Draco compression.
+//When to use Draco compression? is not a win-win situation, the geometries are lighter but the user has to load the DRACOLoader class and the decoder 
+//It also take time and resources for your computer to decode a compressed file, you'll have to adapt accordingly to the project.
+//so DracoLoader is usefull to load much really bigg assets, but if is a small geometry, dont use it.
+
 //The Draco version can be much lighter than the default version in this example, the draco version is 55% much lighter than the default
 //Compression is applied to the buffer data (typically the geometry)
 //Draco is not aexclusive to glTF but htey got popular as the same time and implementation went faster with glTF exporters.
@@ -184,15 +188,59 @@ const duckGLTF = gltfLoader.load('/models/Duck/glTF/Duck.gltf', (gltf)=>{
 //First need to import the DRACOLoader
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
+//Then we have to instanciate it is better if we do that before instanciate the gltf loader
+
+const dracoLoader = new DRACOLoader(loadingManager);
+
+//---------------------------Worker
+//The decoder is also avlible in web assembly, and it can run in a worker to improve performance significatly (The worker is to manage the decoder in different threats of the cpu)
+
+//To do that go to /node_modules/three/examples/jsm/libs/draco then copy the folder into your project
+
+//To use workers is really easy, we just have to pass the path to the draco folder we copied to the function setDecoderPath();
+dracoLoader.setDecoderPath('/draco/');
+
+//Now provide the DRACOLoader instance to the GLTFLoader instance with setDRACOLoader(...)
+gltfLoader.setDRACOLoader(dracoLoader);
+
 gltfLoader.load('/models/Duck/glTF-Draco/Duck.gltf', (gltf)=>{  
-    console.log(gltf)
-    console.log(gltf.scene) 
+    // console.log(gltf)
+    //scene.add(gltf.scene)
 })
+//And here it is, we can still load not compressed glTF file with the GLTFLoader and the draco decoder is only loaded when needed
 
+//------------------------------------------ Animations -----------------------------------------
+//With GLT we can load animations, first load a model with animation like the fox example 
 
+// gltfLoader.load('/models/Fox/glTF/Fox.gltf', (gltf)=>{
+//     console.log(gltf)
+//     gltf.scene.scale.set(0.025, 0.025, 0.025);
+//     scene.add(gltf.scene)
+// })
 
+//Now how we handle the animation, its hard 
+//The loaded gltf object contains a animations property composed of multiple AnimationClips
+//We need to create an AnimationMixer. An AnimationMixer is like a player associated with an object that can contain one or many AnimationClips.
+//Is like animation keyframes to use them and the AnimationMixer is like a player, to create a mixer we have to instanciate it inside de succes gltf loader function
+let mixer = null;
 
+gltfLoader.load('/models/Fox/glTF/Fox.gltf', (gltf)=>{
+    //Create the mixer with AnimtionMixer, then provide the object where the animation will be applied 
+    mixer = new THREE.AnimationMixer(gltf.scene)
 
+    //Then you can take the animation clip and add it to the mixer, when you do it it returns what we call action inside this action you have acces to dhe play() method
+    const action = mixer.clipAction(gltf.animations[0]);
+
+    action.play()
+
+    //Now we have to tell the Mixer to opdate utself on each frame, to do it go to the tick function, and move the mixer declaration outside of the function with a null value and update ir when te model is loaded.
+
+    console.log(action)
+    
+    gltf.scene.scale.set(0.025, 0.025, 0.025);
+    scene.add(gltf.scene)
+
+})
 
 /**
  * Base
@@ -298,6 +346,12 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
+
+    //Update Mixer 
+    //We need to provide it the delta tima
+    if(mixer !== null){
+        mixer.update(deltaTime)
+    }
 
     // Update controls
     controls.update()
