@@ -229,7 +229,7 @@ gltfLoader.load('/models/Fox/glTF/Fox.gltf', (gltf)=>{
     mixer = new THREE.AnimationMixer(gltf.scene)
 
     //Then you can take the animation clip and add it to the mixer, when you do it it returns what we call action inside this action you have acces to dhe play() method
-    const action = mixer.clipAction(gltf.animations[0]);
+    const action = mixer.clipAction(gltf.animations[2]);
 
     action.play()
 
@@ -241,6 +241,11 @@ gltfLoader.load('/models/Fox/glTF/Fox.gltf', (gltf)=>{
     scene.add(gltf.scene)
 
 })
+
+//------------------------------------------ Three.js Editor -----------------------------------------
+//Is lika a tiny online 3D software 
+//Good way to test models 
+//Only woeks with models composed of one file.
 
 /**
  * Base
@@ -348,7 +353,7 @@ const tick = () =>
     previousTime = elapsedTime
 
     //Update Mixer 
-    //We need to provide it the delta tima
+    //We need to provide it the delta time
     if(mixer !== null){
         mixer.update(deltaTime)
     }
