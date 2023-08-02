@@ -32,11 +32,20 @@ window.addEventListener('resize', ()=>{
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
+//Variables
+
+const global = {
+  envMapIntensity: 2,
+}
+
+
+
 //Textures
 
 const loadingManager = new THREE.LoadingManager();
 loadingManager.onLoad = ()=>{
   console.log('Assets loaded');
+  updateAllMaterials();
 };
 loadingManager.onProgress = (progress)=>{
   console.log(progress);
@@ -103,6 +112,40 @@ scene.background = envMapTexture;
 
 scene.environment = envMapTexture;
 
+//We hould like to control the environment maps intensity
+//It has to be done on each material
+//To do it we are going to go though the whole scene using traverse() and apply the intensity whenever it is suitable
+
+//The traverse() methos is avalible on every Object3D and classes that inherit from it like Group, Mesh or even Scene.
+//We will fo it in a separated function named updateAllMaterials and call it once the model is loaded.
+
+//Update all materials fucntion in this function we are going to use the traverse() method
+const updateAllMaterials = ()=>{
+  scene.traverse((child)=>{
+    //We only wan to apply the environment map to the Meshes that taht have a MeshStandarMaterial
+    //To solve this we test if the material is an instance of mesh and can use the properti of the child calles isMesh 
+    if (child.isMesh && child.material instanceof THREE.MeshStandardMaterial){
+      child.material.envMapIntensity = global.envMapIntensity;
+    }
+  })
+}
+
+const gui = new GUI()
+gui.add(global, 'envMapIntensity', 0, 5).name('EnvMap Intensity').onChange(updateAllMaterials);
+
+//Also we can make the background gets blurry tith the backgroundBlurriness propertie and background intensisty
+scene.backgroundBlurriness = 0.07;
+scene.backgroundIntensity = 1.5
+gui.add(scene, 'backgroundBlurriness', 0, 0.25)
+gui.add(scene, 'backgroundIntensity', 0, 3)
+
+//--------------------------------------------- HDRI Equicrangular environment map --------------------------------
+//HDR files .hdr means "High Dynamic Range" (we often say HDRI, where the i stands for image)
+//Color values stored have a much higher range than a traditional image.
+
+//Equirectangular format, that means is only one file image that contains a 360 information. 
+//How do we load this hdri file
+
 //Lights
 // const ambientLight = new THREE.AmbientLight('#ffffff', 1);
 // scene.add(ambientLight)
@@ -117,7 +160,7 @@ const knotTorus = new THREE.Mesh(
     new THREE.TorusKnotGeometry(1, 0.4, 120, 20),
     new THREE.MeshStandardMaterial({
       color:'white',
-      roughness: 0.3,
+      roughness: 0,
       metalness: 1,
       color: '0xaaaaaa'
     })
@@ -131,7 +174,6 @@ scene.add(knotTorus);
 
 camera.position.set(0, 0, 5)
 
-//Gui
 
 //Animate
 const clock = new THREE.Clock();
