@@ -2,6 +2,7 @@ import './style.css';
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import  {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 import GUI from 'lil-gui';
 import { gsap } from 'gsap';
@@ -22,7 +23,14 @@ loadingManager.onLoad = ()=>{
   console.log('assets loaded');
 }
 
-const textureLoader = new THREE.TextureLoader(loadingManager)
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const gltfLoader = new GLTFLoader(loadingManager);
+
+let DuckModel = null;
+gltfLoader.load('/models/Duck.glb', (gltfDuck)=>{
+  DuckModel = gltfDuck;
+  scene.add(DuckModel.scene)
+})
 
 //Resize 
 
@@ -61,9 +69,14 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const orbitControls = new OrbitControls(camera, canvas)
 orbitControls.enableDamping = true;
 
+//Lights 
+const rectAreaLight = new THREE.RectAreaLight('#ffffff', 2, 4, 4);
+rectAreaLight.position.set(0, 5, 0);
+rectAreaLight.lookAt(new THREE.Vector3(0, 0, 0));
+scene.add(rectAreaLight)
 
-
-
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.3);
+scene.add(ambientLight)
 
 //Material 
 const basicMaterial = new THREE.MeshBasicMaterial()
@@ -154,6 +167,31 @@ window.addEventListener('mousemove', (event)=>{
 //Thwe we will cast on the tick function
 
 
+//---------------------------- Mouse enter and mouse leave events ---------------------------
+//Now we are going to re create the mouseenter and mouseleave events
+//The solution is to create a witness variable, containign the currently hovered object
+//If an object intersects, but there wasn't one before, a mouseenter happened
+//If no object instersects, but there was one before, a mouseleave happended
+
+let currentIntersect = false;
+let mouseIntesrsects = null;
+
+//And now we are going to test inside the tick function the mouse event
+
+
+//------------------------------------- Click event-----------------------------------------------------
+//We have all we need to make the click event 
+window.addEventListener('click', ()=>{
+  if (currentIntersect){
+    if(mouseIntesrsects[0].object === cube1Mesh){
+      console.log('click on mesh 1')
+    } else if (mouseIntesrsects[0].object === cube2Mesh){
+      console.log('click on mesh 2')
+    } else if(mouseIntesrsects[0].object === cube3Mesh){
+      console.log('click on mesh 3')
+    } 
+  }
+});
 
 //Tick function
 const clock = new THREE.Clock();
@@ -181,7 +219,7 @@ const tick = ()=>{
   //use the setFromCamera() Method to orient the ray in the right direction, the rest is the same
   raycaster.setFromCamera(mouse, camera);
 
-  const mouseIntesrsects = raycaster.intersectObjects(objectsToTest);
+  mouseIntesrsects = raycaster.intersectObjects(objectsToTest);
 
   for (const object of objectsToTest){
     object.scale.set(1, 1, 1)
@@ -189,6 +227,35 @@ const tick = ()=>{
   for (const intersect of mouseIntesrsects){
     intersect.object.scale.set(1.5, 1.5, 1.5)
   }
+
+  //------------------------- Mouse enterr and mouse leave event------------------------------------
+  if (mouseIntesrsects.length){ //First eval if there is anithing intersecting with the mouse
+    if (currentIntersect   === false){
+      console.log('Mouse enter')
+    }
+    
+    currentIntersect = true;
+  } else {
+    if (currentIntersect){
+      console.log('mouse leave')
+    }
+
+    currentIntersect = false;
+  }
+
+  //------------------------------------- Mouse events on loaded model ---------------------------------
+  // Recursive 
+  //We are calling intesrsectObject on model, wich is a Group, not a Mesh
+  //You can test that by logging model right before assigning in the loaded callback function
+  //Three.js ray caster will test the childs of the group an the childrens of the children by default.
+  //We can deactivate that oprion by setting hte second parameter called recursive: false.
+  if (DuckModel){
+    const modelIntersects = raycaster.intersectObject(DuckModel.scene)
+    if (modelIntersects.length){
+      console.log('duck hover')
+    }
+  }
+
 
   //Update controls
   orbitControls.update()
