@@ -1,24 +1,30 @@
 import './style.css';
 
-import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+//So a good practice is to put the whole experience inside a main class that will then create everything else
 
-import GUI from 'lil-gui';
+//We are going to name it Experience, but it can be whatever name.
 
-console.time('Threejs')
+//We are going to create every thing related to the experience in a specific folder called 'Experience' Inside we are going to create the file wich contains that and all the classes related to the folder will be in that folder.
+//In that file we are going to export that class, import it in the main js and then instanciate it.
 
+//This is an interesting part cause if you are working with a team, will work in this part and other developers will instanciate your class by importing this.
 
+//Import the expreience class and instanciate it then provide the canvas, this way, you can send more parameters
+import Experience from './Experience/Experience.js';
 
-
-
-
-
-
-
+const experience = new Experience(document.querySelector('.canvas__experience'));
 
 
 
+//First we ar
 
+
+// import * as THREE from 'three';
+// import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+
+// import GUI from 'lil-gui';
+
+// console.time('Threejs')
 
 // THREE.ColorManagement.enabled = false;
 
