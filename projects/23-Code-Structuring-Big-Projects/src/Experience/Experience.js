@@ -3,7 +3,10 @@ import * as THREE from 'three'
 import Sizes from "./Utils/Sizes";
 import Time from "./Utils/Time";
 import Camera from './Camera';
-import Renderer from './Renderer';
+import Renderer from './renderer';
+import World from './World/World';
+import Resources from './Utils/Resources';
+import sources from './sources.js';
 
 //------------------------------ Singleton pattern
 //We can use a singleton pattern that way wi can acces to the the experience from other classes
@@ -36,8 +39,10 @@ export default class Experience{
         this.sizes = new Sizes();
         this.time = new Time();
         this.scene = new THREE.Scene();
+        this.resources = new Resources(sources);
         this.camera = new Camera();
         this.renderer = new Renderer();
+        this.world = new World();
 
         //Sizes resize event 
         this.sizes.on('resize', ()=>{
@@ -53,9 +58,12 @@ export default class Experience{
     //This functions will propagate the resize event to the children 
     resize(){
         this.camera.resize();
+        this.renderer.resize();
     }
 
+    //Update the experience on each frame
     update(){
         this.camera.update();
+        this.renderer.update();
     }
 }
