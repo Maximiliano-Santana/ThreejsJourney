@@ -102,8 +102,59 @@ orbitControls.enabled = true;
 
   //The same fragment shader will be used for every visible fragment of the geometry
   //We create the fragment shader (also GLSL)
-  //We provide it of data, Uniforms (like color) and use those data to colorize each pixel. We can't send Attributes, but we can send a value from the vertex of the fragment those are called 'Varyings' and the value get interpolated between the vertices, this Varyings come from the vertex shader.
+  //We provide it of data, Uniforms (like color) and use those data to colorize each pixel. We can't send Attributes, but we can send a value from the vertex of the fragment those are called 'Varyings' and the value get interpolated between the vertices, this Varyings come from the vertex shader, so if we put a vertex with color red and other with green, the color values between the vertices will be interplated and create a gradient.
   //The GPU follows the instructions and color the fragments
+
+
+//-----------Why showld we write our own shaders
+//We have multiple reasons.
+//Three.js materials are limited.
+//Our shaders can be very simpler and performant 
+//We can add custom post-processing
+
+//--------------------------------------- Create our first shaders with RawShader Material -------------------------
+//We can use a ShaderMaterial or a RawShaderMaterial
+//The ShaderMaterial will have some code automatically added to the shader code
+//The RawShaderMaterial will have nothing
+
+//First we create the RawShaderMaterial
+//Now we need to provide the shaders programs provideing an object with the vertexShader and the fragmentShader
+//We can provide it with backticks, but we miss syntax coloration wich may cause problems at developing. To fix that we can separate those programs in different files on a file named shaders/test/vertex.glsd & fragment.glsl in VSCode go to plugins, search for shader install the Shader languages support for VS code plugin. 
+//Before you import those files first we are going to use a linter to validate the code and find poetntial errors
+//This is a VSCode extension
+//---------Now we need to import  shaders
+//If we try to import this files like all other import we get an error cause it tries to import it like it was JavaScript
+//There are two solutions to add support to shaders in Vite
+//vite-plugin-glsl
+//vite-plugin-glslify
+//We just want to be able to import .glsl files and both do that perfectly
+//The difference is with more specific features like including shaders files into others shaders files
+//Handy in 3 situations 
+//We want to split big shaders
+//We want to re-use shaders chunks
+//We want to use external shader chunks made by other developers
+
+//Both vite plugins can do that but with a different syntax
+
+//GLSLIFY is kind of the standar but vite-blugin-glsl is easier to use and well mantained
+//If you neeed to implement vite-plugin-glslify the process is almost exatly the same
+
+//Open terminal
+//Run npm install-plugin-glsl
+
+//in vite.confi.js, import glsl from vite-plugin-glsl
+//And in add an object named plugins wich contains an array with in glsl() function
+//then import it and we can log it and usse those variables
+
+import testVertexShader from '/shaders/test/vertex.glsl';
+import testFragmentShader from '/shaders/test/fragment.glsl';
+
+const material = new THREE.RawShaderMaterial({
+  vertexShader: testVertexShader,
+  fragmentShader: testFragmentShader,
+});
+
+//How do we do that?
 
 
 
@@ -111,7 +162,7 @@ orbitControls.enabled = true;
 
 const proton = new THREE.Mesh(
     new THREE.PlaneGeometry(2, 2),
-    new THREE.MeshBasicMaterial({})
+    material,
 );
 
 scene.add(proton);
