@@ -1,30 +1,37 @@
 import './style.css';
 
-//So a good practice is to put the whole experience inside a main class that will then create everything else
+import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
-//We are going to name it Experience, but it can be whatever name.
+import GUI from 'lil-gui';
 
-//We are going to create every thing related to the experience in a specific folder called 'Experience' Inside we are going to create the file wich contains that and all the classes related to the folder will be in that folder.
-//In that file we are going to export that class, import it in the main js and then instanciate it.
+console.time('Threejs')
 
-//This is an interesting part cause if you are working with a team, will work in this part and other developers will instanciate your class by importing this.
+//Code structuring for bigger projects.
+//Sometimes when we are working on bigger projects, have all the code inside one file could be hard cause 
+//Hard to find what you want
+//Hard to re-use sepecific parts 
+//conlfict with variables
+//conflicts with other developers
+//cramps in your fingers because you have to scroll
 
-//Import the expreience class and instanciate it then provide the canvas, this way, you can send more parameters
-import Experience from './Experience/Experience.js';
+//--------------------------- Javascript Classes and modules ----------------------------------------------
+//We are going to use concepts like classes and module
+//This is a personal, so take think what is good or wrong
 
-const experience = new Experience(document.querySelector('.canvas__experience'));
+//-------------------- Modules
+//The idea of the modules is to separate the code into multiple files and import them when we need it.
+//We are using modules when we import dependencies.
+
+//We aren't going to use the native support
+//Not all browsers are compatible with it 
+//Vite support modules
+
+//
 
 
+//--------------------------------------- three.js code -----------------------------------------------------
 
-//First we ar
-
-
-// import * as THREE from 'three';
-// import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-
-// import GUI from 'lil-gui';
-
-// console.time('Threejs')
 
 // THREE.ColorManagement.enabled = false;
 

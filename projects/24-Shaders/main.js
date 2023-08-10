@@ -20,7 +20,7 @@ const sizes = {
 window.addEventListener('resize', ()=>{
     //Update Sizes 
     sizes.width = window.innerWidth;
-    sizes.height = window.height;
+    sizes.height = window.innerHeight;
 
     //Update camera
     camera.aspect = sizes.width/sizes.height;
@@ -34,7 +34,9 @@ window.addEventListener('resize', ()=>{
 //Textures
 
 const loadingManager = new THREE.LoadingManager();
-const textureLoader = new THREE.TextureLoader();
+const textureLoader = new THREE.TextureLoader(loadingManager);
+
+const flagTexture = textureLoader.load('/textures/flag.jpg');
 
 //Scene 
 const scene = new THREE.Scene();
@@ -149,24 +151,56 @@ orbitControls.enabled = true;
 import testVertexShader from '/shaders/test/vertex.glsl';
 import testFragmentShader from '/shaders/test/fragment.glsl';
 
+//You can still add other common properties like wireframe, side, transparent or flatShading still work
+//But some properties like map, alphaMap, opacity, color, etc. Won't work and we need to write these features ourselves and it can be really hard
 const material = new THREE.RawShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
+  side: THREE.DoubleSide,
+  transparent: true,
+  uniforms: { 
+    uFrequency: {value: new THREE.Vector2(7, 1.8)},
+    uTime: {value: 0},
+    uColor: {value: new THREE.Color('#ff2318')},
+    uTexture: { value: flagTexture },
+  }
 });
 
 //How do we do that?
+//Go to vertez.glsl and fragment.glsl
 
+const gui = new GUI();
+gui.add(material.uniforms.uFrequency.value, 'x', 0, 20, 0.01).name('frequency X')
+gui.add(material.uniforms.uFrequency.value, 'y', 0, 20, 0.01).name('frequency Y')
+
+//------------------------------------- ShaderMaterial
 
 
 //Objects
 
-const proton = new THREE.Mesh(
-    new THREE.PlaneGeometry(2, 2),
-    material,
-);
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(2, 2, 50, 50),
+  material,
+  );
+  plane.scale.y = 2/3;
+  scene.add(plane);
 
-scene.add(proton);
+//----------------------------------------- Creating a attribute 'aRandom' 
 
+//we use a cause A for attributes 
+//If its a uniform use u
+//if its varing  use v
+  
+  const count = plane.geometry.attributes.position.count //We can use the propertie .count that return the count of vertices
+
+  const randomArray = new Float32Array(count);
+  
+  for (let i = 0; i < count ; i++){
+    randomArray[i] = Math.random();
+  }
+
+  plane.geometry.setAttribute('aRandom', new THREE.BufferAttribute(randomArray, 1));
+  
 //Scene Configuration
 
 camera.position.set(0, 0, 5)
@@ -177,6 +211,12 @@ camera.position.set(0, 0, 5)
 const clock = new THREE.Clock();
 
 const tick = ()=>{
+  //Clock
+  const elapsedTime = clock.getElapsedTime();
+  
+  //Update material
+  material.uniforms.uTime.value = elapsedTime;
+
 
     //Controls
     orbitControls.update();
