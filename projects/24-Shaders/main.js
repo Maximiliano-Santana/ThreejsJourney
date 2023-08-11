@@ -5,7 +5,10 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 import GUI from 'lil-gui';
 
-console.time('Threejs')
+//------------------------------------- Shader patterns ---------------------------------------------------------
+
+
+
 
 THREE.ColorManagement.enabled = false;
 
@@ -151,6 +154,7 @@ orbitControls.enabled = true;
 import testVertexShader from '/shaders/test/vertex.glsl';
 import testFragmentShader from '/shaders/test/fragment.glsl';
 
+
 //You can still add other common properties like wireframe, side, transparent or flatShading still work
 //But some properties like map, alphaMap, opacity, color, etc. Won't work and we need to write these features ourselves and it can be really hard
 const material = new THREE.RawShaderMaterial({
@@ -166,23 +170,58 @@ const material = new THREE.RawShaderMaterial({
   }
 });
 
-//How do we do that?
-//Go to vertez.glsl and fragment.glsl
+// const gui = new GUI();
+// gui.add(material.uniforms.uFrequency.value, 'x', 0, 20, 0.01).name('frequency X')
+// gui.add(material.uniforms.uFrequency.value, 'y', 0, 20, 0.01).name('frequency Y')
 
-const gui = new GUI();
-gui.add(material.uniforms.uFrequency.value, 'x', 0, 20, 0.01).name('frequency X')
-gui.add(material.uniforms.uFrequency.value, 'y', 0, 20, 0.01).name('frequency Y')
+//--------------------------------------------------------- Shaders patterns ---------------------------------------------------------
+import gradientColorsVertexShader from '/shaders/gradientColors/vertex.glsl';
+import gradientColorsFragmentShader from '/shaders/gradientColors/fragment.glsl';
 
-//------------------------------------- ShaderMaterial
+import gradientGOVertexShader from '/shaders/gradientGreenOrange/vertex.glsl';
+import gradientGOFragmentShader from '/shaders/gradientGreenOrange/fragment.glsl';
+
+import gradientBWVertexShader from '/shaders/gradientBW/vertex.glsl';
+import gradientBWFragmentShader from '/shaders/gradientBW/fragment.glsl';
 
 
-//Objects
+//Beacause we are going to draw we need to send the uv coordinates
+
+const gradientColorsMaterial = new THREE.ShaderMaterial({
+  vertexShader: gradientColorsVertexShader,
+  fragmentShader: gradientColorsFragmentShader,
+  side: THREE.DoubleSide,
+})
+
+const gradientGOMaterial = new THREE.ShaderMaterial({
+  vertexShader: gradientGOVertexShader,
+  fragmentShader: gradientGOFragmentShader,
+  side: THREE.DoubleSide,
+})
+
+const gradientBWMaterial = new THREE.ShaderMaterial({
+  vertexShader: gradientBWVertexShader,
+  fragmentShader: gradientBWFragmentShader,
+  side: THREE.DoubleSide,
+})
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------Objects
 
 const plane = new THREE.Mesh(
   new THREE.PlaneGeometry(2, 2, 50, 50),
-  material,
+  gradientBWMaterial,
   );
-  plane.scale.y = 2/3;
+  //plane.scale.y = 2/3;
   scene.add(plane);
 
 //----------------------------------------- Creating a attribute 'aRandom' 
@@ -215,7 +254,7 @@ const tick = ()=>{
   const elapsedTime = clock.getElapsedTime();
   
   //Update material
-  material.uniforms.uTime.value = elapsedTime;
+  //material.uniforms.uTime.value = elapsedTime;
 
 
     //Controls
