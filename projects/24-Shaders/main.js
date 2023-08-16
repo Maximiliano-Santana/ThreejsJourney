@@ -46,6 +46,7 @@ const scene = new THREE.Scene();
 
 //Camera 
 const camera = new THREE.PerspectiveCamera(50, sizes.width/sizes.height, 0.1, 100);
+camera.position.set(5, 4, 5);
 
 //Renderer
 const canvas = document.querySelector('.experience')
@@ -184,6 +185,8 @@ import gradientGOFragmentShader from '/shaders/gradientGreenOrange/fragment.glsl
 import gradientBWVertexShader from '/shaders/gradientBW/vertex.glsl';
 import gradientBWFragmentShader from '/shaders/gradientBW/fragment.glsl';
 
+import ragingSeaVertexShader from '/shaders/RagingSea/vertex.glsl';
+import ragingSeaFragmentShader from '/shaders/RagingSea/fragment.glsl';
 
 //Beacause we are going to draw we need to send the uv coordinates
 
@@ -205,11 +208,62 @@ const gradientBWMaterial = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
 })
 
+//---------------------------------- Raging sea shader ------------------------------------------
+const debugObject = {};
+debugObject.dephtColor = '#186691'; 
+debugObject.surfaceColor = '#a1f1fc';
+
+const ragingSeaMaterial = new THREE.RawShaderMaterial({
+  vertexShader: ragingSeaVertexShader,
+  fragmentShader: ragingSeaFragmentShader,
+  side: THREE.DoubleSide,
+  uniforms: {
+    
+    uTime: {value: 0}, 
+    
+    uWavesElevation: { value: 0.08 }, 
+    uWavesFrequency: { value: new THREE.Vector2(2.54, 2.54) },
+    uSpeedAnimation: {value: 0.5}, 
+
+    uWavesSharpnesElevation: { value: 0.2 },
+    uWavesSharpnesFrequency: { value:  1.0 },
+    uWavesSharpnesSpeed: { value: 0.2 },
+    uWavesSharpnesDetail: { value: 4 },
+
+    uDepthColor: {value: new THREE.Color(debugObject.dephtColor)},
+    uSurfaceColor: {value: new THREE.Color(debugObject.surfaceColor)},
+
+    uColorOffset: { value: 0.11 },
+    uColorMultiplier: { value: 3.89 },
+  }
+});
+
+const gui = new GUI();
+
+
+gui.add(ragingSeaMaterial.uniforms.uWavesElevation, 'value', 0, 2, 0.01).name('Waves Elevation');
+gui.add(ragingSeaMaterial.uniforms.uWavesFrequency.value, 'x', 0, 5, 0.01).name('Waves Frequency X');
+gui.add(ragingSeaMaterial.uniforms.uWavesFrequency.value, 'y', 0, 5, 0.01).name('Waves Frequency Z');
+gui.add(ragingSeaMaterial.uniforms.uSpeedAnimation, 'value', 0, 5, 0.01).name('Waves Speed');
+
+gui.add(ragingSeaMaterial.uniforms.uWavesSharpnesElevation, 'value', 0, 5, 0.01).name('Sharpness Elevation');
+gui.add(ragingSeaMaterial.uniforms.uWavesSharpnesDetail, 'value', 0, 5, 1.0).name('Sharpness details');
+gui.add(ragingSeaMaterial.uniforms.uWavesSharpnesFrequency, 'value', 0, 5, 0.01).name('Sharpness frequency');
+gui.add(ragingSeaMaterial.uniforms.uWavesSharpnesSpeed, 'value', 0, 5, 0.01).name('Sharpness Speed');
+
+gui.addColor(debugObject, 'dephtColor').onChange(()=>{
+  ragingSeaMaterial.uniforms.uDepthColor.value.set(debugObject.dephtColor);
+  ragingSeaMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor);
+});
+gui.addColor(debugObject, 'surfaceColor').onChange(()=>{
+  ragingSeaMaterial.uniforms.uDepthColor.value.set(debugObject.dephtColor);
+  ragingSeaMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor);
+});
 
 
 
-
-
+gui.add(ragingSeaMaterial.uniforms.uColorOffset, 'value', 0, 1.2, 0.01).name('Color Offset');
+gui.add(ragingSeaMaterial.uniforms.uColorMultiplier, 'value', 0, 5, 0.01).name('Color Multiplier');
 
 
 
@@ -220,9 +274,17 @@ const gradientBWMaterial = new THREE.ShaderMaterial({
 const plane = new THREE.Mesh(
   new THREE.PlaneGeometry(2, 2, 50, 50),
   gradientBWMaterial,
-  );
+);
   //plane.scale.y = 2/3;
-  scene.add(plane);
+  //scene.add(plane);
+
+const  seaMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(5, 5, 200, 200),
+  ragingSeaMaterial,
+);
+
+seaMesh.rotation.x = -Math.PI*0.5
+scene.add(seaMesh);
 
 //----------------------------------------- Creating a attribute 'aRandom' 
 
@@ -242,8 +304,6 @@ const plane = new THREE.Mesh(
   
 //Scene Configuration
 
-camera.position.set(0, 0, 5)
-
 //Gui
 
 //Animate
@@ -255,7 +315,7 @@ const tick = ()=>{
   
   //Update material
   //material.uniforms.uTime.value = elapsedTime;
-
+  ragingSeaMaterial.uniforms.uTime.value = elapsedTime;
 
     //Controls
     orbitControls.update();
