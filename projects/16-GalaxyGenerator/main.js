@@ -65,7 +65,7 @@ orbitControls.enabled = true;
 const galaxyParameters = {
     count: 100000,
     branches: 5,
-    spin: 0.8,
+    spin: 0.9,
     randomness: 2,
     randomnessPower: 4, 
     radius: 5,
@@ -115,8 +115,8 @@ const generateGalaxy = ()=>{
         const randomZ = Math.pow(Math.random(), galaxyParameters.randomnessPower) * (Math.random()< 0.5 ? 1 : -1)
         
         positionArray[i3 + 0] = Math.cos(branchAngle + spinAngle)*radius + randomX; //Add the particles in different angles
-        positionArray[i3 + 1] = randomY; 
-        positionArray[i3 + 2] = Math.sin(branchAngle + spinAngle)*radius + randomZ;
+        positionArray[i3 + 1] = randomY*0.5; 
+        positionArray[i3 + 2] = Math.sin(branchAngle + spinAngle)*radius + randomZ*2;
         
         //Colors
         //To mix the colors we can create a third color by cloning the insideColor and use the lerp() method to mix it with the color outside 
