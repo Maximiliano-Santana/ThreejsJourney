@@ -387,7 +387,7 @@ const bumpShader = {
 
             vec4 color = texture2D(tDiffuse, newUv);
 
-            color.rgb += lightness * 1.0;
+            color.rgb += lightness * 0.2;
 
             gl_FragColor = color;
         } 
