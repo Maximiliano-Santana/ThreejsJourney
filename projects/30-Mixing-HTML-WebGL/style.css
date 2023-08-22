@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #3c3c3c;
+  overflow: hidden; 
+}
+
+.experience{ 
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline:none;
+}
+
+.loadingBar{
+  width: 100%;
+  height: 20px;
+  bottom: 100px;
+  background-color: white;
+  position: absolute;
+  transform-origin: top left;
+  transform: scaleX(0);
+  transition: transform 0.5s;
+  will-change: transform;
+}
+
+.loadingBar.ended{
+  transform-origin: top right;
+}
+
+.point{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.point:hover .text{
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.point .label{
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 40px;
+  height: 40px;
+  background-color: #3c3c3c;
+  border-radius: 50%;
+  border: 1px solid #c9c9c9;
+  box-sizing: border-box;
+  opacity: 0.5;
+  color: #c9c9c9;
+  font-family: Arial, Helvetica, sans-serif;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  cursor: help;
+  transform: scale(0.001, 0.001);
+  transition: transform 0.25s;
+}
+
+.point.visible .label {
+  transform: scale(1, 1);
+}
+
+.point .text {
+  position: absolute;
+  top: 30px;
+  width: 200px;
+  left: -100px;
+  background-color: #3c3c3c;
+  border:  1px solid #c9c9c9;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  color: #c9c9c9;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  opacity: 0.0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
