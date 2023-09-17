@@ -1,0 +1,21 @@
+html,
+body,
+#root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1c1c1c;
+}
+
+.label > div {
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+  border-radius: 30px;
+  user-select: none;
+}
