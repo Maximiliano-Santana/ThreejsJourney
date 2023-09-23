@@ -17,7 +17,6 @@ export default function Fox(){
 
     const model = useGLTF('./models/Fox/glTF-Binary/Fox.glb');
     model.scene.children[0].children[0].castShadow = true;
-    // model.scene.children.castShadow = true
     const animations = useAnimations(model.animations, model.scene);
     
     //------------------------------ Animation Control and cleanup phase

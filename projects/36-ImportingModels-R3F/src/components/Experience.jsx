@@ -93,8 +93,19 @@ export default function Experience (){
         <Perf position = "top-left"/>
         <OrbitControls/>
             
-        <directionalLight position={[1, 2, 3]} castShadow     mapSize={{ width: 10, height: 10 }}/>
-        <hemisphereLight args={['#ffffff', 'lightgreen', 1]}/>
+        <directionalLight 
+            position={[1, 2, 3]}  
+            castShadow 
+            shadow-mapSize={[2024, 2024]}
+            shadow-camera-near={1}
+            shadow-camera-far={10}
+            shadow-camera-top={6}
+            shadow-camera-right={6}
+            shadow-camera-bottom={ -6 }
+            shadow-camera-left={ -6}
+
+        />
+        <hemisphereLight args={['#ffffff', 'lightgreen', 0.5]}/>
 
         {/* <Suspense fallback={ <Placeholder position={[0, 1.5, 0]} scale={[2, 3, 2]}/> }>
             <FlightHelmet/>
